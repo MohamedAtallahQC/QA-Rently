@@ -1,0 +1,45 @@
+{
+  "name": "rently-tenant-automation",
+  "version": "1.0.0",
+  "description": "Playwright automation tests for Rently Tenant and Admin dashboards",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:tenant": "playwright test --project=tenant-chromium --project=tenant-firefox",
+    "test:admin": "playwright test --project=admin-chromium --project=admin-firefox",
+    "test:tenant-chrome": "playwright test --project=tenant-chromium",
+    "test:tenant-firefox": "playwright test --project=tenant-firefox",
+    "test:landing": "playwright test tests/tenant/landing-page.spec.ts",
+    "test:admin-chrome": "playwright test --project=admin-chromium",
+    "test:admin-firefox": "playwright test --project=admin-firefox",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:ui": "playwright test --ui",
+    "test:report": "playwright show-report",
+    "test:install": "playwright install",
+    "test:codegen": "playwright codegen",
+    "test:trace": "playwright show-trace",
+    "lint": "eslint . --ext .ts,.js",
+    "lint:fix": "eslint . --ext .ts,.js --fix"
+  },
+  "keywords": [
+    "playwright",
+    "automation",
+    "testing",
+    "e2e",
+    "rently",
+    "tenant",
+    "admin"
+  ],
+  "author": "Rently Automation Team",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "@types/node": "^24.4.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "typescript": "^5.0.0"
+  }
+}
