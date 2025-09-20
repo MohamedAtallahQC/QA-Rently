@@ -6,10 +6,10 @@
     "fullyParallel": true,
     "globalSetup": null,
     "globalTeardown": null,
-    "globalTimeout": 600000,
+    "globalTimeout": 0,
     "grep": {},
     "grepInvert": null,
-    "maxFailures": 0,
+    "maxFailures": 1,
     "metadata": {
       "actualWorkers": 1
     },
@@ -46,7 +46,7 @@
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
         ],
-        "timeout": 30000
+        "timeout": 0
       },
       {
         "outputDir": "/Users/mohamedali/MainFiles/Work/BIM/Automation/Rently -Tenant/test-results",
@@ -62,7 +62,7 @@
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
         ],
-        "timeout": 30000
+        "timeout": 0
       },
       {
         "outputDir": "/Users/mohamedali/MainFiles/Work/BIM/Automation/Rently -Tenant/test-results",
@@ -78,7 +78,7 @@
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
         ],
-        "timeout": 30000
+        "timeout": 0
       },
       {
         "outputDir": "/Users/mohamedali/MainFiles/Work/BIM/Automation/Rently -Tenant/test-results",
@@ -94,7 +94,7 @@
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
         ],
-        "timeout": 30000
+        "timeout": 0
       },
       {
         "outputDir": "/Users/mohamedali/MainFiles/Work/BIM/Automation/Rently -Tenant/test-results",
@@ -110,14 +110,14 @@
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
         ],
-        "timeout": 30000
+        "timeout": 0
       }
     ],
     "shard": null,
     "updateSnapshots": "missing",
     "updateSourceMethod": "patch",
     "version": "1.55.0",
-    "workers": 7,
+    "workers": 1,
     "webServer": null
   },
   "suites": [
@@ -135,12 +135,12 @@
           "column": 6,
           "specs": [
             {
-              "title": "should display page title",
+              "title": "should display navigation menu landing page",
               "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 0,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "tenant-chromium",
@@ -150,16 +150,16 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 5091,
+                      "duration": 8829,
                       "errors": [],
                       "stdout": [
                         {
-                          "text": "Title: Flexible Sharia-Compliant Payment Solutions | Rently\n"
+                          "text": "Navigation Links: [\n  \u001b[32m'Rently'\u001b[39m,\n  \u001b[32m'Home'\u001b[39m,\n  \u001b[32m'Rent Installments'\u001b[39m,\n  \u001b[32m'About Us'\u001b[39m,\n  \u001b[32m'Legal Committee'\u001b[39m,\n  \u001b[32m'FAQ'\u001b[39m,\n  \u001b[32m'Sign In'\u001b[39m,\n  \u001b[32m'العربية'\u001b[39m\n]\n"
                         }
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-14T17:58:20.948Z",
+                      "startTime": "2025-09-20T10:01:03.539Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -167,9 +167,9 @@
                   "status": "expected"
                 }
               ],
-              "id": "e0f2b3f5c1ecc224a2ed-7850498108da682fff49",
+              "id": "e0f2b3f5c1ecc224a2ed-b3a1c76fda16e5c465ef",
               "file": "tenant/landing-page.spec.ts",
-              "line": 24,
+              "line": 41,
               "column": 7
             }
           ]
@@ -179,8 +179,8 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-09-14T17:58:20.712Z",
-    "duration": 6003.329,
+    "startTime": "2025-09-20T10:01:03.318Z",
+    "duration": 9812.314,
     "expected": 1,
     "skipped": 0,
     "unexpected": 0,

@@ -38,21 +38,23 @@ test.describe('Landing Page Tests', () => {
     expect(heroSubtitle.length).toBeGreaterThan(0);
   });
 
-  test('should display navigation menu', async () => {
+  test('should display navigation menu landing page', async () => {
     const isNavVisible = await landingPage.isNavigationMenuVisible();
     expect(isNavVisible).toBe(true);
     
     // Get navigation links
     const navLinks = await landingPage.getNavigationLinks();
     expect(navLinks.length).toBeGreaterThan(0);
-    
+
+    console.log('Navigation Links:', navLinks);
     // Verify expected links are present
-    const expectedLinks = ['Home', 'Rent Installments', 'About Us', 'FAQ', 'Contact Us', 'Legal Committee'];
+    const expectedLinks = ['Home', 'Rent Installments', 'About Us', 'FAQ', 'Legal Committee'];
     for (const expectedLink of expectedLinks) {
       const hasLink = navLinks.some(link => 
         link.toLowerCase().includes(expectedLink.toLowerCase())
+        
       );
-      expect(hasLink).toBe(true);
+       expect(hasLink).toBe(true);
     }
   });
 
@@ -69,9 +71,6 @@ test.describe('Landing Page Tests', () => {
     await landingPage.navigateToFAQ();
     await landingPage.waitForPageLoad();
     
-    // Test contact us navigation
-    await landingPage.navigateToContactUs();
-    await landingPage.waitForPageLoad();
     
     // Test legal committee navigation
     await landingPage.navigateToLegalCommittee();

@@ -6,7 +6,6 @@ import { BasePage } from '../BasePage';
  */
 export class LandingPage extends BasePage {
   // Selectors
-  private readonly pageTitle: Locator;
   private readonly heroSection: Locator;
   private readonly heroTitle: Locator;
   private readonly heroSubtitle: Locator;
@@ -65,7 +64,7 @@ export class LandingPage extends BasePage {
     super(page);
     
     // Initialize selectors
-    this.pageTitle = page.locator('h1, h2, h3').filter({ hasText: /rent|installment|rently/i }).first();
+  
     this.heroSection = page.locator('section').filter({ hasText: 'Your Rent on Your TermsWe' }).locator('div').nth(1)
     this.heroTitle = page.locator('h1, h2').filter({ hasText: /your rent on your terms|rent|installment/i }).first();
     this.heroSubtitle = page.locator('p, .subtitle').filter({ hasText: /flexible|sharia|payment/i }).first();
