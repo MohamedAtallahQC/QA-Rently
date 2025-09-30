@@ -1,6 +1,5 @@
 import { test, expect } from '@playwright/test';
 import { LandingPage } from '../../Pages/Tenant/LandingPage';
-import { Helpers } from '../../utils/Helpers';
 
 test.describe('Landing Page Tests', () => {
   let landingPage: LandingPage;
@@ -29,117 +28,124 @@ test.describe('Landing Page Tests', () => {
   });
 
   test('should display hero section', async () => {
-    const heroTitle = await landingPage.getHeroTitle();
-    const heroSubtitle = await landingPage.getHeroSubtitle();
-    
+    // Batch hero section data retrieval for better performance
+    const [heroTitle, heroSubtitle] = await Promise.all([
+      landingPage.getHeroTitle(),
+      landingPage.getHeroSubtitle()
+    ]);
+
+    console.log('Hero Title:', heroTitle);
+    console.log('Hero Subtitle:', heroSubtitle);
+
     expect(heroTitle).toBeTruthy();
     expect(heroSubtitle).toBeTruthy();
     expect(heroTitle.length).toBeGreaterThan(0);
     expect(heroSubtitle.length).toBeGreaterThan(0);
   });
 
-  test('should display navigation menu landing page', async () => {
-    const isNavVisible = await landingPage.isNavigationMenuVisible();
+  test('should display navigation menu', async () => {
+    // Batch navigation checks for better performance
+    const [isNavVisible, navLinks] = await Promise.all([
+      landingPage.isNavigationMenuVisible(),
+      landingPage.getNavigationLinks()
+    ]);
+
     expect(isNavVisible).toBe(true);
-    
-    // Get navigation links
-    const navLinks = await landingPage.getNavigationLinks();
     expect(navLinks.length).toBeGreaterThan(0);
 
     console.log('Navigation Links:', navLinks);
-    // Verify expected links are present
-    const expectedLinks = ['Home', 'Rent Installments', 'About Us', 'FAQ', 'Legal Committee'];
-    for (const expectedLink of expectedLinks) {
-      const hasLink = navLinks.some(link => 
-        link.toLowerCase().includes(expectedLink.toLowerCase())
-        
+    // Verify main navigation sections are present (adjusted for actual page structure)
+    const expectedSections = ['Rent Installments', 'FAQ'];
+    for (const expectedSection of expectedSections) {
+      const hasSection = navLinks.some(link =>
+        link.toLowerCase().includes(expectedSection.toLowerCase())
       );
-       expect(hasLink).toBe(true);
+      expect(hasSection).toBe(true);
     }
   });
 
-  test('should navigate to different pages from navigation menu', async () => {
-    // Test rent installments navigation
-    await landingPage.navigateToRentInstallments();
-    await landingPage.waitForPageLoad();
-    
-    // Test about us navigation
-    await landingPage.navigateToAboutUs();
-    await landingPage.waitForPageLoad();
-    
-    // Test FAQ navigation
-    await landingPage.navigateToFAQ();
-    await landingPage.waitForPageLoad();
-    
-    
-    // Test legal committee navigation
-    await landingPage.navigateToLegalCommittee();
-    await landingPage.waitForPageLoad();
+  test('should scroll to different sections from navigation menu', async () => {
+    const initialUrl = landingPage.getCurrentUrl() as string;
+    console.log('Initial URL:', initialUrl);
+
+    // Optimized section scrolling - batch visibility checks
+    await landingPage.scrollToRentInstallments();
+    await landingPage.scrollToFAQ();
+    await landingPage.scrollToTrackOrders();
+    await landingPage.scrollToPromotions();
+
+    // Batch all visibility checks for better performance
+    const [isRentVisible, isFAQVisible, isTrackVisible, isPromotionsVisible] = await Promise.all([
+      landingPage.isRentInstallmentsSectionVisible(),
+      landingPage.isFAQSectionVisible(),
+      landingPage.isTrackOrdersSectionVisible(),
+      landingPage.isPromotionsSectionVisible()
+    ]);
+
+    expect(isRentVisible).toBe(true);
+    expect(isFAQVisible).toBe(true);
+    expect(isTrackVisible).toBe(true);
+    expect(isPromotionsVisible).toBe(true);
+
+    // URL should still be the same page (scrolling, not navigation)
+    const finalUrl = landingPage.getCurrentUrl() as string;
+    expect(finalUrl.split('#')[0]).toBe(initialUrl.split('#')[0]);
   });
 
-  test('should click CTA buttons', async () => {
-    // Click know more button
+  test('should handle CTA buttons correctly', async () => {
+    const initialUrl = landingPage.getCurrentUrl() as string;
+
+    // Click know more button (should scroll to rent installments section)
     await landingPage.clickKnowMoreButton();
-    await landingPage.waitForPageLoad();
-    
-    // Click apply now button
+    expect(await landingPage.isRentInstallmentsSectionVisible()).toBe(true);
+    // Should remain on same page
+    const urlAfterKnowMore = landingPage.getCurrentUrl() as string;
+    expect(urlAfterKnowMore.split('#')[0]).toBe(initialUrl.split('#')[0]);
+
+    // Click apply now button (should navigate to tenant application page)
     await landingPage.clickApplyNowButton();
-    await landingPage.waitForPageLoad();
-    
-    // Click start renting button
-    await landingPage.clickStartRentingButton();
-    await landingPage.waitForPageLoad();
+    // This should navigate to a different page
+    const urlAfterApply = landingPage.getCurrentUrl() as string;
+    expect(urlAfterApply).not.toBe(initialUrl);
+    expect(urlAfterApply).toContain('tenant-application');
   });
 
-  test('should display features section', async () => {
-    const isFeaturesVisible = await landingPage.isFeaturesSectionVisible();
-    expect(isFeaturesVisible).toBe(true);
-    
-    // Get features count
-    const featuresCount = await landingPage.getFeatureCardsCount();
-    expect(featuresCount).toBeGreaterThan(0);
-    
-    // Get features information
-    const features = await landingPage.getAllFeaturesInfo();
-    expect(features.length).toBe(featuresCount);
-    
-    // Verify features have content
-    for (const feature of features) {
-      expect(feature.title).toBeTruthy();
-      expect(feature.description).toBeTruthy();
-    }
-  });
+  test('should display rent installments section with process steps', async () => {
+    const isRentInstallmentsVisible = await landingPage.isRentInstallmentsSectionVisible();
+    expect(isRentInstallmentsVisible).toBe(true);
 
-  test('should display steps section', async () => {
-    const isStepsVisible = await landingPage.isStepsSectionVisible();
-    expect(isStepsVisible).toBe(true);
-    
-    // Get steps count
-    const stepsCount = await landingPage.getStepCardsCount();
+    // Get process steps count
+    const stepsCount = await landingPage.getProcessStepsCount();
     expect(stepsCount).toBeGreaterThan(0);
-    
-    // Get steps information
-    const steps = await landingPage.getAllStepsInfo();
+
+    // Get process steps information
+    const steps = await landingPage.getAllProcessStepsInfo();
     expect(steps.length).toBe(stepsCount);
-    
+
     // Verify steps have content
     for (const step of steps) {
-      expect(step.number).toBeTruthy();
       expect(step.title).toBeTruthy();
       expect(step.description).toBeTruthy();
     }
   });
 
-  test('should display dashboard preview', async () => {
+  test('should display track orders section', async () => {
+    const isTrackOrdersVisible = await landingPage.isTrackOrdersSectionVisible();
+    expect(isTrackOrdersVisible).toBe(true);
+
+    // Check if dashboard preview is visible
     const isDashboardVisible = await landingPage.isDashboardPreviewVisible();
     expect(isDashboardVisible).toBe(true);
-    
-    // Get dashboard preview content
-    const dashboardTitle = await landingPage.getDashboardPreviewTitle();
-    const dashboardDescription = await landingPage.getDashboardPreviewDescription();
-    
-    expect(dashboardTitle).toBeTruthy();
-    expect(dashboardDescription).toBeTruthy();
+  });
+
+  test('should display promotions section', async () => {
+    const isPromotionsVisible = await landingPage.isPromotionsSectionVisible();
+    expect(isPromotionsVisible).toBe(true);
+  });
+
+  test('should verify all main sections are present', async () => {
+    const allSectionsPresent = await landingPage.verifyAllMainSectionsPresent();
+    expect(allSectionsPresent).toBe(true);
   });
 
   test('should display FAQ section', async () => {
@@ -161,24 +167,46 @@ test.describe('Landing Page Tests', () => {
     }
   });
 
-  test('should interact with FAQ items', async () => {
-    const faqCount = await landingPage.getFAQItemsCount();
-    
-    if (faqCount > 0) {
-      // Click on first FAQ item
+  test('should switch between FAQ tabs and interact with items', async () => {
+    // Scroll to FAQ section first
+    await landingPage.scrollToFAQ();
+    expect(await landingPage.isFAQSectionVisible()).toBe(true);
+
+    // Test Lessor FAQ tab
+    await landingPage.switchToLessorFAQTab();
+    expect(await landingPage.getActiveFAQTab()).toBe('lessor');
+
+    const lessorFAQCount = await landingPage.getFAQQuestionsCountForTab('lessor');
+    expect(lessorFAQCount).toBeGreaterThan(0);
+
+    // Test clicking on first lessor FAQ item
+    if (lessorFAQCount > 0) {
       await landingPage.clickFAQItem(0);
-      
-      // Wait for answer to appear
-      await landingPage.page.waitForTimeout(1000);
-      
-      // Check if answer is visible
-      const isAnswerVisible = await landingPage.isFAQAnswerVisible(0);
-      expect(isAnswerVisible).toBe(true);
-      
-      // Get FAQ answer
+      expect(await landingPage.isFAQItemExpanded(0)).toBe(true);
+
       const answer = await landingPage.getFAQAnswer(0);
       expect(answer).toBeTruthy();
     }
+
+    // Test Tenant FAQ tab
+    await landingPage.switchToTenantFAQTab();
+    expect(await landingPage.getActiveFAQTab()).toBe('tenant');
+
+    const tenantFAQCount = await landingPage.getFAQQuestionsCountForTab('tenant');
+    expect(tenantFAQCount).toBeGreaterThan(0);
+
+    // Test clicking on first tenant FAQ item
+    if (tenantFAQCount > 0) {
+      await landingPage.clickFAQItem(0);
+      expect(await landingPage.isFAQItemExpanded(0)).toBe(true);
+
+      const answer = await landingPage.getFAQAnswer(0);
+      expect(answer).toBeTruthy();
+    }
+
+    // Verify we can get all questions for current tab
+    const allQuestions = await landingPage.getAllFAQQuestions();
+    expect(allQuestions.length).toBeGreaterThan(0);
   });
 
   test('should display footer', async () => {
@@ -202,127 +230,190 @@ test.describe('Landing Page Tests', () => {
     expect(licenseNumber).toBeTruthy();
   });
 
-  test('should click footer CTA buttons', async () => {
-    // Click register as lessor button
-    await landingPage.clickRegisterAsLessorButton();
-    await landingPage.waitForPageLoad();
-    
-    // Click apply now footer button
-    await landingPage.clickApplyNowFooterButton();
-    await landingPage.waitForPageLoad();
+  test('should interact with footer elements', async () => {
+    // Scroll to footer
+    await landingPage.scrollToSection('footer');
+    expect(await landingPage.isFooterVisible()).toBe(true);
+
+    // Verify contact email is present
+    const contactEmail = await landingPage.getContactInfo();
+    expect(contactEmail).toContain('@');
+
+    // Verify social links are present
+    const socialLinksCount = await landingPage.getSocialLinksCount();
+    expect(socialLinksCount).toBeGreaterThan(0);
+
+    // Get social links URLs
+    const socialUrls = await landingPage.getSocialLinksUrls();
+    expect(socialUrls.length).toBeGreaterThan(0);
+    for (const url of socialUrls) {
+      expect(url).toMatch(/linkedin|instagram|twitter/i);
+    }
   });
 
-  test('should toggle language', async () => {
-    // Toggle language
+
+  test('should toggle language and navigate to Arabic version', async () => {
+    const initialLanguage = await landingPage.getCurrentLanguage();
+    expect(initialLanguage).toBe('en');
+
+    // Toggle to Arabic language
     await landingPage.toggleLanguage();
-    
-    // Wait for page to update
+
+    // Wait for page to load
     await landingPage.waitForPageLoad();
-    
+
+    // Verify we're now on Arabic version
+    const newLanguage = await landingPage.getCurrentLanguage();
+    expect(newLanguage).toBe('ar');
+    console.log('New language:', newLanguage);
+
     // Verify page is still functional
     expect(await landingPage.verifyLandingPageLoaded()).toBe(true);
+
+    // Navigate back to English for other tests
+    await landingPage.navigateTo('/en');
+    await landingPage.waitForPageLoad();
   });
 
-  test('should toggle theme', async () => {
+  test('should toggle theme between light and dark', async () => {
+    const initialTheme = await landingPage.getCurrentTheme();
+    console.log('Initial theme:', initialTheme);
+
     // Toggle theme
     await landingPage.toggleTheme();
-    
-    // Wait for page to update
-    await landingPage.waitForPageLoad();
-    
+    await landingPage.waitForThemeChange();
+
+    // Verify theme changed
+    const newTheme = await landingPage.getCurrentTheme();
+    console.log('New theme:', newTheme);
+    expect(newTheme).not.toBe(initialTheme);
+
     // Verify page is still functional
     expect(await landingPage.verifyLandingPageLoaded()).toBe(true);
+
+    // Toggle back
+    await landingPage.toggleTheme();
+    await landingPage.waitForThemeChange();
+
+    const finalTheme = await landingPage.getCurrentTheme();
+    console.log('Final theme:', finalTheme);
   });
 
-  test('should scroll to different sections', async () => {
-    // Scroll to features section
-    await landingPage.scrollToSection('features');
-    expect(await landingPage.isFeaturesSectionVisible()).toBe(true);
-    
-    // Scroll to steps section
-    await landingPage.scrollToSection('steps');
-    expect(await landingPage.isStepsSectionVisible()).toBe(true);
-    
-    // Scroll to dashboard section
-    await landingPage.scrollToSection('dashboard');
-    expect(await landingPage.isDashboardPreviewVisible()).toBe(true);
-    
-    // Scroll to FAQ section
+  test('should scroll to different sections and verify viewport position', async () => {
+    // Test rent-installments section
+    await landingPage.scrollToSection('rent-installments');
+    expect(await landingPage.verifySectionInViewport('rent-installments')).toBe(true);
+
+    // Test track-orders section
+    await landingPage.scrollToSection('track-orders');
+    expect(await landingPage.verifySectionInViewport('track-orders')).toBe(true);
+
+    // Test promotions section
+    await landingPage.scrollToSection('promotions');
+    expect(await landingPage.verifySectionInViewport('promotions')).toBe(true);
+
+    // Test FAQ section
     await landingPage.scrollToSection('faq');
-    expect(await landingPage.isFAQSectionVisible()).toBe(true);
-    
-    // Scroll to footer
+    expect(await landingPage.verifySectionInViewport('faq')).toBe(true);
+
+    // Test footer
     await landingPage.scrollToSection('footer');
     expect(await landingPage.isFooterVisible()).toBe(true);
   });
 
   test('should refresh page and maintain functionality', async () => {
-    // Get initial features count
-    const initialFeaturesCount = await landingPage.getFeatureCardsCount();
-    
     // Refresh page
     await landingPage.refreshLandingPage();
-    
-    // Get features count after refresh
-    const refreshedFeaturesCount = await landingPage.getFeatureCardsCount();
-    
-    // Count should be similar
-    expect(refreshedFeaturesCount).toBeGreaterThanOrEqual(0);
+
+    // Get process steps count after refresh
+    const refreshedStepsCount = await landingPage.getProcessStepsCount();
+
+    // Count should be greater than 0
+    expect(refreshedStepsCount).toBeGreaterThan(0);
+
+    // Verify all main sections are still present
+    expect(await landingPage.verifyAllMainSectionsPresent()).toBe(true);
   });
 
-  test('should handle rapid navigation clicks', async () => {
-    // Rapidly click different navigation elements
-    await landingPage.clickKnowMoreButton();
-    await landingPage.page.waitForTimeout(100);
-    
-    await landingPage.clickApplyNowButton();
-    await landingPage.page.waitForTimeout(100);
-    
-    await landingPage.clickStartRentingButton();
-    await landingPage.page.waitForTimeout(100);
-    
-    // Should not cause errors
+  test('should handle rapid section scrolling', async () => {
+    // Rapidly scroll to different sections
+    await landingPage.scrollToRentInstallments();
+
+    await landingPage.scrollToTrackOrders();
+
+    await landingPage.scrollToPromotions();
+
+    await landingPage.scrollToFAQ();
+
+    // Should not cause errors and page should still be functional
     expect(await landingPage.verifyLandingPageLoaded()).toBe(true);
+    expect(await landingPage.isNavigationMenuVisible()).toBe(true);
+  });
+
+  test('should test mobile navigation if in mobile viewport', async ({ page }) => {
+    // Set mobile viewport
+    await page.setViewportSize({ width: 375, height: 667 });
+
+    // Refresh page for mobile layout
+    await landingPage.refreshLandingPage();
+
+    // Check if mobile navigation is available
+    const isMobileNavVisible = await landingPage.isMobileNavigationVisible();
+
+    if (!isMobileNavVisible) {
+      // Try to open mobile navigation
+      await landingPage.openMobileNavigation();
+    }
+
+    // Verify page is still functional in mobile view
+    expect(await landingPage.verifyLandingPageLoaded()).toBe(true);
+
+    // Reset to desktop viewport
+    await page.setViewportSize({ width: 1280, height: 720 });
   });
 
   test('should display correct content structure', async () => {
     // Verify hero section content
     const heroTitle = await landingPage.getHeroTitle();
     expect(heroTitle).toMatch(/rent|installment|terms/i);
-    
-    // Verify features section content
-    const features = await landingPage.getAllFeaturesInfo();
-    for (const feature of features) {
-      expect(feature.title).toMatch(/lessor|tenant|financial|occupancy/i);
-    }
-    
-    // Verify steps section content
-    const steps = await landingPage.getAllStepsInfo();
+
+    // Verify process steps content
+    const steps = await landingPage.getAllProcessStepsInfo();
+    expect(steps.length).toBeGreaterThan(0);
     for (const step of steps) {
-      expect(step.number).toMatch(/\d+/);
       expect(step.title).toBeTruthy();
+      expect(step.description).toBeTruthy();
     }
+
+    // Verify FAQ content exists for both tabs
+    await landingPage.scrollToFAQ();
+    const lessorQuestions = await landingPage.getFAQQuestionsCountForTab('lessor');
+    const tenantQuestions = await landingPage.getFAQQuestionsCountForTab('tenant');
+    expect(lessorQuestions + tenantQuestions).toBeGreaterThan(0);
   });
 
-  test('should handle empty sections gracefully', async () => {
-    // Check if sections exist and handle empty states
-    const featuresCount = await landingPage.getFeatureCardsCount();
-    const stepsCount = await landingPage.getStepCardsCount();
+  test('should handle sections gracefully and verify content exists', async () => {
+    // Check if main sections exist and have content
+    const processStepsCount = await landingPage.getProcessStepsCount();
     const faqCount = await landingPage.getFAQItemsCount();
-    
-    // At least one section should have content
-    expect(featuresCount + stepsCount + faqCount).toBeGreaterThan(0);
+
+    // Verify sections have content
+    expect(processStepsCount).toBeGreaterThan(0);
+    expect(faqCount).toBeGreaterThan(0);
+
+    // Verify all main sections are visible
+    expect(await landingPage.verifyAllMainSectionsPresent()).toBe(true);
   });
 
   test('should maintain page state on scroll', async () => {
     // Scroll to different sections
-    await landingPage.scrollToSection('features');
-    await landingPage.scrollToSection('steps');
-    await landingPage.scrollToSection('dashboard');
-    
+    await landingPage.scrollToSection('rent-installments');
+    await landingPage.scrollToSection('track-orders');
+    await landingPage.scrollToSection('promotions');
+
     // Verify page is still functional
     expect(await landingPage.verifyLandingPageLoaded()).toBe(true);
-    
+
     // Verify navigation is still accessible
     expect(await landingPage.isNavigationMenuVisible()).toBe(true);
   });

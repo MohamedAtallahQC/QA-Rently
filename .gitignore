@@ -5,4 +5,9 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# Test artifacts
+/screenshots/
+
+# Temporary test data
 TestData.ts

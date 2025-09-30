@@ -6,10 +6,10 @@
     "fullyParallel": true,
     "globalSetup": null,
     "globalTeardown": null,
-    "globalTimeout": 0,
+    "globalTimeout": 600000,
     "grep": {},
     "grepInvert": null,
-    "maxFailures": 1,
+    "maxFailures": 0,
     "metadata": {
       "actualWorkers": 1
     },
@@ -46,7 +46,7 @@
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
         ],
-        "timeout": 0
+        "timeout": 15000
       },
       {
         "outputDir": "/Users/mohamedali/MainFiles/Work/BIM/Automation/Rently -Tenant/test-results",
@@ -62,7 +62,7 @@
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
         ],
-        "timeout": 0
+        "timeout": 15000
       },
       {
         "outputDir": "/Users/mohamedali/MainFiles/Work/BIM/Automation/Rently -Tenant/test-results",
@@ -78,7 +78,7 @@
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
         ],
-        "timeout": 0
+        "timeout": 15000
       },
       {
         "outputDir": "/Users/mohamedali/MainFiles/Work/BIM/Automation/Rently -Tenant/test-results",
@@ -94,7 +94,7 @@
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
         ],
-        "timeout": 0
+        "timeout": 15000
       },
       {
         "outputDir": "/Users/mohamedali/MainFiles/Work/BIM/Automation/Rently -Tenant/test-results",
@@ -110,67 +110,82 @@
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
         ],
-        "timeout": 0
+        "timeout": 15000
       }
     ],
     "shard": null,
     "updateSnapshots": "missing",
     "updateSourceMethod": "patch",
     "version": "1.55.0",
-    "workers": 1,
+    "workers": 7,
     "webServer": null
   },
   "suites": [
     {
-      "title": "tenant/landing-page.spec.ts",
-      "file": "tenant/landing-page.spec.ts",
+      "title": "tenant/tenant-application.spec.ts",
+      "file": "tenant/tenant-application.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "Landing Page Tests",
-          "file": "tenant/landing-page.spec.ts",
+          "title": "Tenant Application Page Tests",
+          "file": "tenant/tenant-application.spec.ts",
           "line": 5,
           "column": 6,
-          "specs": [
+          "specs": [],
+          "suites": [
             {
-              "title": "should display navigation menu landing page",
-              "ok": true,
-              "tags": [],
-              "tests": [
+              "title": "Page Load and Basic Functionality",
+              "file": "tenant/tenant-application.spec.ts",
+              "line": 13,
+              "column": 8,
+              "specs": [
                 {
-                  "timeout": 0,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "tenant-chromium",
-                  "projectName": "tenant-chromium",
-                  "results": [
+                  "title": "should display tenant application page elements",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 8829,
-                      "errors": [],
-                      "stdout": [
+                      "timeout": 15000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "tenant-chromium",
+                      "projectName": "tenant-chromium",
+                      "results": [
                         {
-                          "text": "Navigation Links: [\n  \u001b[32m'Rently'\u001b[39m,\n  \u001b[32m'Home'\u001b[39m,\n  \u001b[32m'Rent Installments'\u001b[39m,\n  \u001b[32m'About Us'\u001b[39m,\n  \u001b[32m'Legal Committee'\u001b[39m,\n  \u001b[32m'FAQ'\u001b[39m,\n  \u001b[32m'Sign In'\u001b[39m,\n  \u001b[32m'العربية'\u001b[39m\n]\n"
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 3943,
+                          "errors": [],
+                          "stdout": [
+                            {
+                              "text": "2025-09-23T19:49:05.830Z INFO  [TenantApplicationPage] Navigating to: https://dev.rently.sa/en/tenant-application\n"
+                            },
+                            {
+                              "text": "2025-09-23T19:49:09.351Z INFO  [TenantApplicationPage] Successfully navigated to: https://dev.rently.sa/en/tenant-application\n"
+                            },
+                            {
+                              "text": "2025-09-23T19:49:09.439Z INFO  [TenantApplicationPage] Screenshot saved: test-results/screenshots/tenant-application-page-loaded-2025-09-23T19-49-09-370Z.png\n"
+                            }
+                          ],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-09-23T19:49:04.735Z",
+                          "annotations": [],
+                          "attachments": []
                         }
                       ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-09-20T10:01:03.539Z",
-                      "annotations": [],
-                      "attachments": []
+                      "status": "expected"
                     }
                   ],
-                  "status": "expected"
+                  "id": "ffa9d9e09a829b0e973c-49e1bfd01e0574787fe7",
+                  "file": "tenant/tenant-application.spec.ts",
+                  "line": 14,
+                  "column": 9
                 }
-              ],
-              "id": "e0f2b3f5c1ecc224a2ed-b3a1c76fda16e5c465ef",
-              "file": "tenant/landing-page.spec.ts",
-              "line": 41,
-              "column": 7
+              ]
             }
           ]
         }
@@ -179,8 +194,8 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-09-20T10:01:03.318Z",
-    "duration": 9812.314,
+    "startTime": "2025-09-23T19:49:04.507Z",
+    "duration": 5108.671,
     "expected": 1,
     "skipped": 0,
     "unexpected": 0,

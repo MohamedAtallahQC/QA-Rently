@@ -3,10 +3,15 @@
  */
 
 export const TIMEOUTS = {
-  SHORT: 5000,
-  MEDIUM: 10000,
-  LONG: 30000,
-  VERY_LONG: 60000
+  SHORT: 2000,
+  MEDIUM: 5000,
+  LONG: 15000,
+  VERY_LONG: 30000,
+  ELEMENT_WAIT: 5000,
+  PAGE_LOAD: 15000,
+  NETWORK_IDLE: 8000,
+  ANIMATION: 500,
+  RETRY_DELAY: 500
 } as const;
 
 export const SELECTORS = {
@@ -47,8 +52,8 @@ export const MESSAGES = {
 } as const;
 
 export const BROWSER_CONFIG = {
-  HEADLESS: process.env.CI === 'true',
-  SLOW_MO: process.env.CI === 'true' ? 0 : 100,
+  HEADLESS: process.env['CI'] === 'true',
+  SLOW_MO: process.env['CI'] === 'true' ? 0 : 100,
   VIEWPORT: {
     WIDTH: 1920,
     HEIGHT: 1080
@@ -56,7 +61,39 @@ export const BROWSER_CONFIG = {
 } as const;
 
 export const TEST_ENVIRONMENT = {
-  IS_CI: process.env.CI === 'true',
-  IS_HEADLESS: process.env.HEADLESS === 'true',
-  DEBUG_MODE: process.env.DEBUG === 'true'
+  IS_CI: process.env['CI'] === 'true',
+  IS_HEADLESS: process.env['HEADLESS'] === 'true',
+  DEBUG_MODE: process.env['DEBUG'] === 'true'
+} as const;
+
+export const RETRY_CONFIG = {
+  DEFAULT_MAX_ATTEMPTS: 3,
+  ELEMENT_MAX_ATTEMPTS: 3,
+  NETWORK_MAX_ATTEMPTS: 5,
+  DEFAULT_DELAY: 1000,
+  ELEMENT_DELAY: 500,
+  NETWORK_DELAY: 500,
+  BACKOFF_FACTOR: 2,
+  MAX_DELAY: 10000
+} as const;
+
+export const PATHS = {
+  SCREENSHOTS: process.env['SCREENSHOT_PATH'] || './screenshots',
+  VIDEOS: process.env['VIDEO_PATH'] || './test-results/videos',
+  TRACES: process.env['TRACE_PATH'] || './test-results/traces',
+  DOWNLOADS: process.env['DOWNLOAD_PATH'] || './test-results/downloads',
+  LOGS: process.env['LOG_PATH'] || './test-results/logs'
+} as const;
+
+export const FILE_EXTENSIONS = {
+  SCREENSHOT: '.png',
+  VIDEO: '.webm',
+  TRACE: '.zip',
+  LOG: '.log'
+} as const;
+
+export const ANIMATION_CONFIG = {
+  DISABLED: process.env['CI'] === 'true' ? 'disabled' : 'allow',
+  WAIT_FOR_ANIMATIONS: false, // Disabled for performance optimization
+  ANIMATION_TIMEOUT: 200 // Reduced for faster test execution
 } as const;

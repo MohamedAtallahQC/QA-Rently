@@ -1,4 +1,6 @@
 import { Page, expect } from '@playwright/test';
+import path from 'path';
+import { PATHS, FILE_EXTENSIONS } from './Constants';
 
 /**
  * Utility helper functions for test automation
@@ -64,9 +66,10 @@ export class Helpers {
    */
   static async takeScreenshot(page: Page, name: string): Promise<void> {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    await page.screenshot({ 
-      path: `screenshots/${name}-${timestamp}.png`, 
-      fullPage: true 
+    const screenshotPath = path.join(PATHS.SCREENSHOTS, `${name}-${timestamp}${FILE_EXTENSIONS.SCREENSHOT}`);
+    await page.screenshot({
+      path: screenshotPath,
+      fullPage: true
     });
   }
 

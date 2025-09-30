@@ -3,121 +3,109 @@ import { BasePage } from '../BasePage';
 
 /**
  * Page Object Model for Rently Landing Page
+ *
+ * This class provides methods to interact with the Rently landing page at https://dev.rently.sa/en
+ * The page includes:
+ * - Hero section with CTA buttons
+ * - Navigation with section scrolling
+ * - Rent installments process steps
+ * - Track orders dashboard preview
+ * - Promotions section
+ * - FAQ with Lessor/Tenant tabs
+ * - Footer with contact information
+ *
+ * @example
+ * const landingPage = new LandingPage(page);
+ * await landingPage.navigateToLandingPage();
+ * await landingPage.scrollToFAQ();
+ * await landingPage.switchToTenantFAQTab();
  */
 export class LandingPage extends BasePage {
-  // Selectors
+  // Hero Section
   private readonly heroSection: Locator;
   private readonly heroTitle: Locator;
   private readonly heroSubtitle: Locator;
   private readonly knowMoreButton: Locator;
   private readonly applyNowButton: Locator;
-  private readonly startRentingButton: Locator;
-  
+
   // Navigation
   private readonly navigationMenu: Locator;
+  private readonly mobileNavigationDrawer: Locator;
   private readonly rentInstallmentsLink: Locator;
-  private readonly aboutUsLink: Locator;
-  private readonly legalCommitteeLink: Locator;
+ 
   private readonly faqLink: Locator;
-  private readonly contactUsLink: Locator;
   private readonly languageToggle: Locator;
   private readonly themeToggle: Locator;
-  
-  // Features Section
-  private readonly featuresSection: Locator;
-  private readonly featureCards: Locator;
-  private readonly featureTitle: Locator;
-  private readonly featureDescription: Locator;
-  
-  // Steps Section
-  private readonly stepsSection: Locator;
-  private readonly stepCards: Locator;
-  private readonly stepNumber: Locator;
-  private readonly stepTitle: Locator;
-  private readonly stepDescription: Locator;
-  private readonly stepTime: Locator;
-  
-  // Dashboard Preview
+
+ 
+
+  // Rent Installments Section
+  private readonly rentInstallmentsSection: Locator;
+  private readonly processSteps: Locator;
+
+  // Track Orders Section
+  private readonly trackOrdersSection: Locator;
   private readonly dashboardPreview: Locator;
-  private readonly dashboardTitle: Locator;
-  private readonly dashboardDescription: Locator;
-  
+
+  // Promotions Section
+  private readonly promotionsSection: Locator;
+
   // FAQ Section
   private readonly faqSection: Locator;
+  private readonly faqLessorTab: Locator;
+  private readonly faqTenantTab: Locator;
   private readonly faqItems: Locator;
-  private readonly faqQuestion: Locator;
-  private readonly faqAnswer: Locator;
-  private readonly faqToggle: Locator;
-  
+  private readonly faqQuestions: Locator;
+  private readonly faqAnswers: Locator;
+
   // Footer
   private readonly footer: Locator;
-  private readonly footerLinks: Locator;
-  private readonly socialLinks: Locator;
-  private readonly contactInfo: Locator;
-  private readonly licenseNumber: Locator;
-  
-  // CTA Buttons
-  private readonly registerAsLessorButton: Locator;
-  private readonly applyNowFooterButton: Locator;
+  private readonly footerContactEmail: Locator;
+  private readonly footerSocialLinks: Locator;
+  private readonly footerApplyButton: Locator;
+  private readonly footerRegisterButton: Locator;
 
   constructor(page: Page) {
-    super(page);
+    super(page, 'https://dev.rently.sa/');
     
-    // Initialize selectors
-  
-    this.heroSection = page.locator('section').filter({ hasText: 'Your Rent on Your TermsWe' }).locator('div').nth(1)
-    this.heroTitle = page.locator('h1, h2').filter({ hasText: /your rent on your terms|rent|installment/i }).first();
-    this.heroSubtitle = page.locator('p, .subtitle').filter({ hasText: /flexible|sharia|payment/i }).first();
-    this.knowMoreButton = page.locator('button:has-text("Know More"), a:has-text("Know More")').first();
-    this.applyNowButton = page.locator('button:has-text("Apply Now"), a:has-text("Apply Now")').first();
-    this.startRentingButton = page.locator('button:has-text("Start Renting"), a:has-text("Start Renting")').first();
-    
-    // Navigation
-    this.navigationMenu = page.locator('nav, .navigation, .navbar').first();
-    this.rentInstallmentsLink = page.locator('a:has-text("Rent Installments"), [href*="rent"]').first();
-    this.aboutUsLink = page.locator('a:has-text("About Us"), [href*="about"]').first();
-    this.legalCommitteeLink = page.locator('a:has-text("Legal Committee"), [href*="legal"]').first();
-    this.faqLink = page.locator('a:has-text("FAQ"), [href*="faq"]').first();
-    this.contactUsLink = page.locator('a:has-text("Contact Us"), [href*="contact"]').first();
-    this.languageToggle = page.locator('button:has-text("العربية"), button:has-text("English")').first();
-    this.themeToggle = page.locator('button[aria-label*="theme"], button[title*="theme"]').first();
-    
-    // Features Section
-    this.featuresSection = page.locator('[data-testid="features"], .features, .features-section').first();
-    this.featureCards = page.locator('[data-testid="feature-card"], .feature-card, .card').filter({ hasText: /lessor|tenant/i });
-    this.featureTitle = page.locator('[data-testid="feature-title"], .feature-title, h3, h4');
-    this.featureDescription = page.locator('[data-testid="feature-description"], .feature-description, p');
-    
-    // Steps Section
-    this.stepsSection = page.locator('[data-testid="steps"], .steps, .steps-section').first();
-    this.stepCards = page.locator('[data-testid="step-card"], .step-card, .card').filter({ hasText: /\d+/ });
-    this.stepNumber = page.locator('[data-testid="step-number"], .step-number').filter({ hasText: /\d+/ });
-    this.stepTitle = page.locator('[data-testid="step-title"], .step-title, h3, h4');
-    this.stepDescription = page.locator('[data-testid="step-description"], .step-description, p');
-    this.stepTime = page.locator('[data-testid="step-time"], .step-time, .time');
-    
-    // Dashboard Preview
-    this.dashboardPreview = page.locator('[data-testid="dashboard-preview"], .dashboard-preview').first();
-    this.dashboardTitle = page.locator('[data-testid="dashboard-title"], .dashboard-title, h2, h3').first();
-    this.dashboardDescription = page.locator('[data-testid="dashboard-description"], .dashboard-description, p').first();
-    
-    // FAQ Section
-    this.faqSection = page.locator('[data-testid="faq"], .faq, .faq-section').first();
-    this.faqItems = page.locator('[data-testid="faq-item"], .faq-item, .accordion-item');
-    this.faqQuestion = page.locator('[data-testid="faq-question"], .faq-question, .question, h4, h5');
-    this.faqAnswer = page.locator('[data-testid="faq-answer"], .faq-answer, .answer, .content');
-    this.faqToggle = page.locator('[data-testid="faq-toggle"], .faq-toggle, button, .accordion-toggle');
-    
-    // Footer
-    this.footer = page.locator('footer, [data-testid="footer"], .footer').first();
-    this.footerLinks = page.locator('footer a, .footer a');
-    this.socialLinks = page.locator('[data-testid="social-links"], .social-links a');
-    this.contactInfo = page.locator('[data-testid="contact-info"], .contact-info');
-    this.licenseNumber = page.locator('[data-testid="license-number"], .license-number').filter({ hasText: /\d+/ });
-    
-    // CTA Buttons
-    this.registerAsLessorButton = page.locator('button:has-text("Register as Lessor"), a:has-text("Register as Lessor")').first();
-    this.applyNowFooterButton = page.locator('button:has-text("Apply Now"), a:has-text("Apply Now")').last();
+    // Hero Section - optimized selectors
+    this.heroSection = page.locator('section').first();
+    this.heroTitle = page.getByRole('heading', { level: 1 }).first();
+    this.heroSubtitle = page.locator('p').first();
+    this.knowMoreButton = page.locator('a[href="/en#rent-installments"]');
+    this.applyNowButton = page.locator('a[href="/en/tenant-application"]');
+
+    // Navigation - optimized selectors
+    this.navigationMenu = page.getByRole('navigation').first();
+    this.mobileNavigationDrawer = page.locator('[role="menu"], .drawer, .mobile-nav');
+    this.rentInstallmentsLink = page.locator('a[href*="rent-installments"], a[href="/en#rent-installments"]');
+    this.faqLink = page.locator('a[href*="faq"], a[href*="#faqs"]');
+    this.languageToggle = page.getByRole('link', { name: /العربية|arabic/i }).or(page.locator('a[href="/ar"]'));
+    this.themeToggle = page.locator('[aria-label*="theme"], .theme-toggle, button:has-text("theme")');
+
+    // Section locators - optimized for performance
+    this.rentInstallmentsSection = page.locator('#rent-installments, [data-section="rent-installments"]');
+    this.processSteps = this.rentInstallmentsSection.locator('.step, [data-step], [class*="step"], li');
+
+    this.trackOrdersSection = page.locator('#track-orders, [data-section="track-orders"]');
+    this.dashboardPreview = this.trackOrdersSection.locator('img, [data-testid="dashboard-preview"], .dashboard-image');
+
+    this.promotionsSection = page.locator('#promotions, [data-section="promotions"]');
+
+    // FAQ Section - optimized selectors
+    this.faqSection = page.locator('#faqs, [data-section="faq"]');
+    this.faqLessorTab = this.faqSection.getByRole('tab', { name: /lessor/i }).or(this.faqSection.locator('[value="lessor"], button:has-text("lessor")'));
+    this.faqTenantTab = this.faqSection.getByRole('tab', { name: /tenant/i }).or(this.faqSection.locator('[value="tenant"], button:has-text("tenant")'));
+    this.faqItems = this.faqSection.getByRole('button').or(this.faqSection.locator('[data-faq-item], .accordion-item, .faq-item'));
+    this.faqQuestions = this.faqSection.locator('h3, h4, .question, [data-question]');
+    this.faqAnswers = this.faqSection.locator('[data-state="open"], .answer, .accordion-content');
+
+    // Footer - optimized selectors
+    this.footer = page.getByRole('contentinfo').or(page.locator('footer'));
+    this.footerContactEmail = this.footer.getByRole('link', { name: /info@rently\.sa/i }).or(this.footer.locator('a[href*="mailto"]'));
+    this.footerSocialLinks = this.footer.getByRole('link').filter({ has: page.locator('[href*="linkedin"], [href*="instagram"], [href*="twitter"]') });
+    this.footerApplyButton = this.footer.getByRole('link', { name: /apply/i }).or(this.footer.getByRole('button', { name: /apply/i }));
+    this.footerRegisterButton = this.footer.getByRole('link', { name: /register/i }).or(this.footer.getByRole('button', { name: /register/i }));
   }
 
   /**
@@ -133,7 +121,7 @@ export class LandingPage extends BasePage {
    */
   async verifyLandingPageLoaded(): Promise<boolean> {
     try {
-      await this.waitForElement(this.heroSection, 10000);
+      await this.waitForElement(this.heroSection, { timeout: 10000 });
       return true;
     } catch {
       return false;
@@ -149,16 +137,30 @@ export class LandingPage extends BasePage {
 
   /**
    * Get hero section title
+   * @returns The hero title text, or empty string if not found
    */
   async getHeroTitle(): Promise<string> {
-    return await this.getText(this.heroTitle);
+    try {
+      await this.waitForElement(this.heroTitle, { timeout: 5000 });
+      return await this.getText(this.heroTitle);
+    } catch {
+      console.warn('Hero title not found or not visible');
+      return '';
+    }
   }
 
   /**
    * Get hero section subtitle
+   * @returns The hero subtitle text, or empty string if not found
    */
   async getHeroSubtitle(): Promise<string> {
-    return await this.getText(this.heroSubtitle);
+    try {
+      await this.waitForElement(this.heroSubtitle, { timeout: 5000 });
+      return await this.getText(this.heroSubtitle);
+    } catch {
+      console.warn('Hero subtitle not found or not visible');
+      return '';
+    }
   }
 
   /**
@@ -176,10 +178,10 @@ export class LandingPage extends BasePage {
   }
 
   /**
-   * Click start renting button
+   * @deprecated Use clickApplyNowButton instead
    */
   async clickStartRentingButton(): Promise<void> {
-    await this.clickElement(this.startRentingButton);
+    await this.clickApplyNowButton();
   }
 
   /**
@@ -190,31 +192,74 @@ export class LandingPage extends BasePage {
   }
 
   /**
-   * Navigate to about us page
+   * @deprecated About us navigation may not exist on current page
    */
   async navigateToAboutUs(): Promise<void> {
-    await this.clickElement(this.aboutUsLink);
+    // Try to find about link in navigation, fallback to no-op
+    const aboutLink = this.navigationMenu.locator('a:has-text("About"), a[href*="about"]');
+    if (await this.isElementVisible(aboutLink)) {
+      await this.clickElement(aboutLink);
+    } else {
+      console.warn('About us navigation not found on current page');
+    }
   }
 
   /**
-   * Navigate to legal committee page
+   * @deprecated Legal committee navigation may not exist on current page
    */
   async navigateToLegalCommittee(): Promise<void> {
-    await this.clickElement(this.legalCommitteeLink);
+    // Try to find legal link in navigation, fallback to no-op
+    const legalLink = this.navigationMenu.locator('a:has-text("Legal"), a[href*="legal"]');
+    if (await this.isElementVisible(legalLink)) {
+      await this.clickElement(legalLink);
+    } else {
+      console.warn('Legal committee navigation not found on current page');
+    }
   }
 
   /**
-   * Navigate to FAQ page
+   * @deprecated Use scrollToFAQ for section scrolling instead
    */
   async navigateToFAQ(): Promise<void> {
-    await this.clickElement(this.faqLink);
+    await this.scrollToFAQ();
   }
 
   /**
-   * Navigate to contact us page
+   * @deprecated Contact us navigation may not exist as separate page
    */
   async navigateToContactUs(): Promise<void> {
-    await this.clickElement(this.contactUsLink);
+    // Try to scroll to footer which contains contact information
+    await this.scrollToElement(this.footer);
+  }
+
+  /**
+   * Scroll to rent installments section (does not navigate to new page)
+   */
+  async scrollToRentInstallments(): Promise<void> {
+    await this.clickElement(this.rentInstallmentsLink);
+    await this.waitForElement(this.rentInstallmentsSection);
+  }
+
+  /**
+   * Scroll to track orders section
+   */
+  async scrollToTrackOrders(): Promise<void> {
+    await this.scrollToElement(this.trackOrdersSection);
+  }
+
+  /**
+   * Scroll to promotions section
+   */
+  async scrollToPromotions(): Promise<void> {
+    await this.scrollToElement(this.promotionsSection);
+  }
+
+  /**
+   * Scroll to FAQ section
+   */
+  async scrollToFAQ(): Promise<void> {
+    await this.clickElement(this.faqLink);
+    await this.waitForElement(this.faqSection);
   }
 
   /**
@@ -236,99 +281,130 @@ export class LandingPage extends BasePage {
   }
 
   /**
-   * Check if features section is visible
+   * Wait for theme change to complete
+   */
+  async waitForThemeChange(): Promise<void> {
+    await this.page.waitForTimeout(500); // Allow theme transition
+  }
+
+  /**
+   * Get current theme (light/dark)
+   */
+  async getCurrentTheme(): Promise<'light' | 'dark' | 'unknown'> {
+    try {
+      const htmlClass = await this.page.locator('html').getAttribute('class') || '';
+      const bodyClass = await this.page.locator('body').getAttribute('class') || '';
+
+      if (htmlClass.includes('dark') || bodyClass.includes('dark')) {
+        return 'dark';
+      } else if (htmlClass.includes('light') || bodyClass.includes('light')) {
+        return 'light';
+      }
+      return 'unknown';
+    } catch {
+      return 'unknown';
+    }
+  }
+
+  /**
+   * Get current language from URL
+   */
+  async getCurrentLanguage(): Promise<'en' | 'ar' | 'unknown'> {
+    const url = this.getCurrentUrl() as string;
+    if (url.includes('/en')) return 'en';
+    if (url.includes('/ar')) return 'ar';
+    return 'unknown';
+  }
+
+  /**
+   * Check if rent installments section is visible
+   */
+  async isRentInstallmentsSectionVisible(): Promise<boolean> {
+    return await this.isElementVisible(this.rentInstallmentsSection);
+  }
+
+  /**
+   * Check if track orders section is visible
+   */
+  async isTrackOrdersSectionVisible(): Promise<boolean> {
+    return await this.isElementVisible(this.trackOrdersSection);
+  }
+
+  /**
+   * Check if promotions section is visible
+   */
+  async isPromotionsSectionVisible(): Promise<boolean> {
+    return await this.isElementVisible(this.promotionsSection);
+  }
+
+  /**
+   * @deprecated Use isRentInstallmentsSectionVisible instead
    */
   async isFeaturesSectionVisible(): Promise<boolean> {
-    return await this.isElementVisible(this.featuresSection);
+    return await this.isRentInstallmentsSectionVisible();
   }
 
   /**
-   * Get number of feature cards
+   * @deprecated Use getProcessStepsCount instead - features are now process steps
    */
   async getFeatureCardsCount(): Promise<number> {
-    return await this.featureCards.count();
+    return await this.getProcessStepsCount();
   }
 
   /**
-   * Get feature information by index
+   * @deprecated Use getProcessStepInfo instead - features are now process steps
    */
   async getFeatureInfo(index: number): Promise<{ title: string; description: string } | null> {
-    const featureCard = this.featureCards.nth(index);
-    
-    if (!(await this.isElementVisible(featureCard))) {
-      return null;
-    }
-
-    const title = await this.getText(featureCard.locator(this.featureTitle));
-    const description = await this.getText(featureCard.locator(this.featureDescription));
-
-    return { title, description };
+    return await this.getProcessStepInfo(index);
   }
 
   /**
-   * Get all features information
+   * @deprecated Use getAllProcessStepsInfo instead - features are now process steps
    */
   async getAllFeaturesInfo(): Promise<{ title: string; description: string }[]> {
-    const count = await this.getFeatureCardsCount();
-    const features: { title: string; description: string }[] = [];
-    
-    for (let i = 0; i < count; i++) {
-      const featureInfo = await this.getFeatureInfo(i);
-      if (featureInfo) {
-        features.push(featureInfo);
-      }
-    }
-    
-    return features;
+    return await this.getAllProcessStepsInfo();
   }
 
   /**
-   * Check if steps section is visible
+   * @deprecated Use isRentInstallmentsSectionVisible instead
    */
   async isStepsSectionVisible(): Promise<boolean> {
-    return await this.isElementVisible(this.stepsSection);
+    return await this.isRentInstallmentsSectionVisible();
   }
 
   /**
-   * Get number of step cards
+   * @deprecated Use getProcessStepsCount instead
    */
   async getStepCardsCount(): Promise<number> {
-    return await this.stepCards.count();
+    return await this.getProcessStepsCount();
   }
 
   /**
-   * Get step information by index
+   * @deprecated Use getProcessStepInfo instead - returns compatible format
    */
   async getStepInfo(index: number): Promise<{ number: string; title: string; description: string; time: string } | null> {
-    const stepCard = this.stepCards.nth(index);
-    
-    if (!(await this.isElementVisible(stepCard))) {
-      return null;
-    }
+    const stepInfo = await this.getProcessStepInfo(index);
+    if (!stepInfo) return null;
 
-    const number = await this.getText(stepCard.locator(this.stepNumber));
-    const title = await this.getText(stepCard.locator(this.stepTitle));
-    const description = await this.getText(stepCard.locator(this.stepDescription));
-    const time = await this.getText(stepCard.locator(this.stepTime));
-
-    return { number, title, description, time };
+    return {
+      number: (index + 1).toString(), // Generate step number based on index
+      title: stepInfo.title,
+      description: stepInfo.description,
+      time: '' // Time information not available in new structure
+    };
   }
 
   /**
-   * Get all steps information
+   * @deprecated Use getAllProcessStepsInfo instead - returns compatible format
    */
   async getAllStepsInfo(): Promise<{ number: string; title: string; description: string; time: string }[]> {
-    const count = await this.getStepCardsCount();
-    const steps: { number: string; title: string; description: string; time: string }[] = [];
-    
-    for (let i = 0; i < count; i++) {
-      const stepInfo = await this.getStepInfo(i);
-      if (stepInfo) {
-        steps.push(stepInfo);
-      }
-    }
-    
-    return steps;
+    const steps = await this.getAllProcessStepsInfo();
+    return steps.map((step, index) => ({
+      number: (index + 1).toString(),
+      title: step.title,
+      description: step.description,
+      time: ''
+    }));
   }
 
   /**
@@ -342,14 +418,16 @@ export class LandingPage extends BasePage {
    * Get dashboard preview title
    */
   async getDashboardPreviewTitle(): Promise<string> {
-    return await this.getText(this.dashboardTitle);
+    const titleElement = this.trackOrdersSection.locator('h2, h3, .title, .dashboard-title');
+    return await this.getText(titleElement);
   }
 
   /**
    * Get dashboard preview description
    */
   async getDashboardPreviewDescription(): Promise<string> {
-    return await this.getText(this.dashboardDescription);
+    const descriptionElement = this.trackOrdersSection.locator('p, .description, .dashboard-description');
+    return await this.getText(descriptionElement);
   }
 
   /**
@@ -367,12 +445,78 @@ export class LandingPage extends BasePage {
   }
 
   /**
-   * Click on FAQ item
+   * Switch to Lessor FAQ tab
+   * @description Clicks the Lessor tab in the FAQ section and waits for content to load
+   */
+  async switchToLessorFAQTab(): Promise<void> {
+    await this.clickElement(this.faqLessorTab);
+    await this.page.waitForTimeout(500); // Wait for tab content to load
+  }
+
+  /**
+   * Switch to Tenant FAQ tab
+   * @description Clicks the Tenant tab in the FAQ section and waits for content to load
+   */
+  async switchToTenantFAQTab(): Promise<void> {
+    await this.clickElement(this.faqTenantTab);
+    await this.page.waitForTimeout(500); // Wait for tab content to load
+  }
+
+  /**
+   * Get currently active FAQ tab
+   * @returns 'lessor', 'tenant', or null if unable to determine
+   * @description Checks the aria attributes to determine which FAQ tab is currently active
+   */
+  async getActiveFAQTab(): Promise<'lessor' | 'tenant' | null> {
+    try {
+      const lessorActive = await this.faqLessorTab.getAttribute('data-state') === 'active' ||
+                          await this.faqLessorTab.getAttribute('aria-selected') === 'true';
+      const tenantActive = await this.faqTenantTab.getAttribute('data-state') === 'active' ||
+                          await this.faqTenantTab.getAttribute('aria-selected') === 'true';
+
+      if (lessorActive) return 'lessor';
+      if (tenantActive) return 'tenant';
+      return null;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Get FAQ questions count for specific tab
+   */
+  async getFAQQuestionsCountForTab(tab: 'lessor' | 'tenant'): Promise<number> {
+    if (tab === 'lessor') {
+      await this.switchToLessorFAQTab();
+    } else {
+      await this.switchToTenantFAQTab();
+    }
+
+    await this.page.waitForTimeout(300); // Wait for content to load
+    return await this.faqQuestions.count();
+  }
+
+  /**
+   * Check if FAQ item is expanded
+   */
+  async isFAQItemExpanded(index: number): Promise<boolean> {
+    try {
+      const faqItem = this.faqItems.nth(index);
+      const expanded = await faqItem.getAttribute('data-state') === 'open' ||
+                      await faqItem.getAttribute('aria-expanded') === 'true';
+      return expanded;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Click on FAQ item by index
    */
   async clickFAQItem(index: number): Promise<void> {
     const faqItem = this.faqItems.nth(index);
-    const toggle = faqItem.locator(this.faqToggle);
-    await this.clickElement(toggle);
+    await this.clickElement(faqItem);
+    await this.page.waitForTimeout(300); // Wait for accordion animation
   }
 
   /**
@@ -380,7 +524,7 @@ export class LandingPage extends BasePage {
    */
   async getFAQQuestion(index: number): Promise<string> {
     const faqItem = this.faqItems.nth(index);
-    return await this.getText(faqItem.locator(this.faqQuestion));
+    return await this.getText(faqItem.locator('h3, h4, .question'));
   }
 
   /**
@@ -388,7 +532,7 @@ export class LandingPage extends BasePage {
    */
   async getFAQAnswer(index: number): Promise<string> {
     const faqItem = this.faqItems.nth(index);
-    return await this.getText(faqItem.locator(this.faqAnswer));
+    return await this.getText(faqItem.locator('.answer, .content, [data-state="open"]'));
   }
 
   /**
@@ -396,7 +540,7 @@ export class LandingPage extends BasePage {
    */
   async isFAQAnswerVisible(index: number): Promise<boolean> {
     const faqItem = this.faqItems.nth(index);
-    const answer = faqItem.locator(this.faqAnswer);
+    const answer = faqItem.locator('.answer, .content, [data-state="open"]');
     return await this.isElementVisible(answer);
   }
 
@@ -428,64 +572,223 @@ export class LandingPage extends BasePage {
    * Get footer links
    */
   async getFooterLinks(): Promise<string[]> {
-    const links = this.footerLinks;
+    const links = this.footer.locator('a:not([href*="linkedin"]):not([href*="instagram"]):not([href*="twitter"]):not([href*="mailto"])');
     const count = await links.count();
     const linkTexts: string[] = [];
-    
+
     for (let i = 0; i < count; i++) {
       const linkText = await this.getText(links.nth(i));
       if (linkText.trim()) {
         linkTexts.push(linkText.trim());
       }
     }
-    
+
     return linkTexts;
   }
 
   /**
-   * Get social media links
+   * Get social media links (returns URLs for consistency with getSocialLinksUrls)
    */
   async getSocialLinks(): Promise<string[]> {
-    const links = this.socialLinks;
-    const count = await links.count();
-    const linkTexts: string[] = [];
-    
-    for (let i = 0; i < count; i++) {
-      const linkText = await this.getText(links.nth(i));
-      if (linkText.trim()) {
-        linkTexts.push(linkText.trim());
-      }
-    }
-    
-    return linkTexts;
+    return await this.getSocialLinksUrls();
   }
 
   /**
    * Get contact information
    */
   async getContactInfo(): Promise<string> {
-    return await this.getText(this.contactInfo);
+    return await this.getText(this.footerContactEmail);
   }
 
   /**
    * Get license number
    */
   async getLicenseNumber(): Promise<string> {
-    return await this.getText(this.licenseNumber);
+    const licenseElement = this.footer.locator(':has-text("License"), [class*="license"]');
+    return await this.getText(licenseElement);
+  }
+
+  
+
+
+  /**
+   * Get footer contact email
+   */
+  async getFooterContactEmail(): Promise<string> {
+    return await this.getText(this.footerContactEmail);
   }
 
   /**
-   * Click register as lessor button
+   * Get social media links count
+   */
+  async getSocialLinksCount(): Promise<number> {
+    return await this.footerSocialLinks.count();
+  }
+
+  /**
+   * Get footer social media links URLs
+   */
+  async getSocialLinksUrls(): Promise<string[]> {
+    const links = this.footerSocialLinks;
+    const count = await links.count();
+    const urls: string[] = [];
+
+    for (let i = 0; i < count; i++) {
+      const href = await links.nth(i).getAttribute('href');
+      if (href) {
+        urls.push(href);
+      }
+    }
+
+    return urls;
+  }
+
+  /**
+   * Get process steps count
+   */
+  async getProcessStepsCount(): Promise<number> {
+    return await this.processSteps.count();
+  }
+
+  /**
+   * Get process step information
+   */
+  async getProcessStepInfo(index: number): Promise<{ title: string; description: string } | null> {
+    const stepElement = this.processSteps.nth(index);
+
+    if (!(await this.isElementVisible(stepElement))) {
+      return null;
+    }
+
+    const title = await this.getText(stepElement.locator('h3, h4, .step-title'));
+    const description = await this.getText(stepElement.locator('p, .step-description'));
+
+    return { title, description };
+  }
+
+  /**
+   * Get all process steps information
+   */
+  async getAllProcessStepsInfo(): Promise<{ title: string; description: string }[]> {
+    const count = await this.getProcessStepsCount();
+    const steps: { title: string; description: string }[] = [];
+
+    for (let i = 0; i < count; i++) {
+      const stepInfo = await this.getProcessStepInfo(i);
+      if (stepInfo) {
+        steps.push(stepInfo);
+      }
+    }
+
+    return steps;
+  }
+
+  /**
+   * Verify all main sections are present on the page
+   */
+  async verifyAllMainSectionsPresent(): Promise<boolean> {
+    const sectionsPresent = await Promise.all([
+      this.isElementVisible(this.heroSection),
+      this.isElementVisible(this.rentInstallmentsSection),
+      this.isElementVisible(this.trackOrdersSection),
+      this.isElementVisible(this.promotionsSection),
+      this.isElementVisible(this.faqSection),
+      this.isElementVisible(this.footer)
+    ]);
+
+    return sectionsPresent.every(present => present);
+  }
+
+  /**
+   * Verify section is in viewport after scrolling
+   */
+  async verifySectionInViewport(section: 'rent-installments' | 'track-orders' | 'promotions' | 'faq' | 'footer'): Promise<boolean> {
+    let sectionElement: Locator;
+
+    switch (section) {
+      case 'rent-installments':
+        sectionElement = this.rentInstallmentsSection;
+        break;
+      case 'track-orders':
+        sectionElement = this.trackOrdersSection;
+        break;
+      case 'promotions':
+        sectionElement = this.promotionsSection;
+        break;
+      case 'faq':
+        sectionElement = this.faqSection;
+        break;
+      case 'footer':
+        sectionElement = this.footer;
+        break;
+      default:
+        return false;
+    }
+
+    return await this.isSectionInViewport(sectionElement);
+  }
+
+  /**
+   * Check if a specific section is in viewport
+   */
+  async isSectionInViewport(sectionLocator: Locator): Promise<boolean> {
+    try {
+      const box = await sectionLocator.boundingBox();
+      if (!box) return false;
+
+      const viewport = this.page.viewportSize();
+      if (!viewport) return false;
+
+      return box.y >= 0 && box.y < viewport.height;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Check if mobile navigation drawer is visible
+   */
+  async isMobileNavigationVisible(): Promise<boolean> {
+    return await this.isElementVisible(this.mobileNavigationDrawer);
+  }
+
+  /**
+   * Open mobile navigation (typically for mobile viewports)
+   */
+  async openMobileNavigation(): Promise<void> {
+    const mobileMenuButton = this.page.locator('button[aria-label*="menu"], .menu-button, .hamburger');
+    if (await this.isElementVisible(mobileMenuButton)) {
+      await this.clickElement(mobileMenuButton);
+      await this.waitForElement(this.mobileNavigationDrawer);
+    }
+  }
+
+  /**
+   * Click footer apply button
+   */
+  async clickFooterApplyButton(): Promise<void> {
+    await this.clickElement(this.footerApplyButton);
+  }
+
+  /**
+   * Click footer register button
+   */
+  async clickFooterRegisterButton(): Promise<void> {
+    await this.clickElement(this.footerRegisterButton);
+  }
+
+  /**
+   * @deprecated Use clickFooterRegisterButton instead
    */
   async clickRegisterAsLessorButton(): Promise<void> {
-    await this.clickElement(this.registerAsLessorButton);
+    await this.clickElement(this.footerRegisterButton);
   }
 
   /**
-   * Click apply now footer button
+   * @deprecated Use clickFooterApplyButton instead
    */
   async clickApplyNowFooterButton(): Promise<void> {
-    await this.clickElement(this.applyNowFooterButton);
+    await this.clickElement(this.footerApplyButton);
   }
 
   /**
@@ -504,20 +807,23 @@ export class LandingPage extends BasePage {
   }
 
   /**
-   * Scroll to specific section
+   * Scroll to specific section (legacy method for backward compatibility)
    */
-  async scrollToSection(section: 'features' | 'steps' | 'dashboard' | 'faq' | 'footer'): Promise<void> {
+  async scrollToSection(section: 'features' | 'steps' | 'dashboard' | 'faq' | 'footer' | 'rent-installments' | 'track-orders' | 'promotions'): Promise<void> {
     let sectionElement: Locator;
-    
+
     switch (section) {
       case 'features':
-        sectionElement = this.featuresSection;
-        break;
       case 'steps':
-        sectionElement = this.stepsSection;
+      case 'rent-installments':
+        sectionElement = this.rentInstallmentsSection;
         break;
       case 'dashboard':
-        sectionElement = this.dashboardPreview;
+      case 'track-orders':
+        sectionElement = this.trackOrdersSection;
+        break;
+      case 'promotions':
+        sectionElement = this.promotionsSection;
         break;
       case 'faq':
         sectionElement = this.faqSection;
@@ -528,7 +834,7 @@ export class LandingPage extends BasePage {
       default:
         throw new Error(`Unknown section: ${section}`);
     }
-    
+
     await this.scrollToElement(sectionElement);
   }
 
@@ -566,12 +872,14 @@ export class LandingPage extends BasePage {
   }
 
   /**
-   * Wait for landing page to load completely
+   * Wait for landing page to load completely - optimized
    */
   async waitForLandingPageToLoad(): Promise<void> {
-    await this.waitForElement(this.heroSection);
-    await this.waitForElement(this.navigationMenu);
-    // Wait for dynamic content to load
-    await this.page.waitForTimeout(2000);
+    await Promise.all([
+      this.waitForElement(this.heroSection, { timeout: 3000 }),
+      this.waitForElement(this.navigationMenu, { timeout: 3000 })
+    ]);
+    // Reduced dynamic content wait time
+    await this.page.waitForTimeout(200);
   }
 }

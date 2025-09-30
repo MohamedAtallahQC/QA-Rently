@@ -23,8 +23,8 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [['html'], ['json', { outputFile: 'test-results.json' }]],
-  /* Global timeout for each test */
-  timeout: 30000,
+  /* Global timeout for each test - optimized for performance */
+  timeout: 15000,
   /* Global timeout for the whole test run */
   globalTimeout: 600000,
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -35,10 +35,25 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     /* Record video on failure */
     video: 'retain-on-failure',
-    /* Global test timeout */
-    actionTimeout: 10000,
-    /* Navigation timeout */
-    navigationTimeout: 30000,
+    /* Global test timeout - optimized for performance */
+    actionTimeout: 5000,
+    /* Navigation timeout - optimized for performance */
+    navigationTimeout: 15000,
+    /* Optimize for performance */
+    ignoreHTTPSErrors: true,
+    /* Reduce browser overhead */
+    launchOptions: {
+      args: [
+        '--no-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+        '--disable-software-rasterizer',
+        '--disable-background-timer-throttling',
+        '--disable-backgrounding-occluded-windows',
+        '--disable-renderer-backgrounding',
+        '--disable-features=TranslateUI,VizDisplayCompositor'
+      ]
+    }
   },
 
   /* Configure projects for different environments */

@@ -1,7 +1,17 @@
 {
   "permissions": {
     "allow": [
-      "Read(//Users/mohamedali/**)"
+      "Read(//Users/mohamedali/**)",
+      "Bash(npm run test:landing:*)",
+      "Bash(npx tsc:*)",
+      "Bash(timeout 60s npm run test:landing -- --grep \"should display rent installments section\")",
+      "WebFetch(domain:dev.rently.sa)",
+      "Bash(npx playwright test:*)",
+      "Bash(npm run test:tenant-chrome:*)",
+      "Bash(npx:*)",
+      "WebFetch(domain:sandbox.zatca-hackathon.bugsbytes.com)",
+      "Bash(grep:*)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []
